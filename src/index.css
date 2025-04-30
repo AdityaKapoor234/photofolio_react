@@ -11,3 +11,30 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.bodySpace {
+  margin: 40px 50px;
+}
+
+.loadingBox {
+  position: relative;
+  height: 80vh;
+  margin: auto;
+}
+
+.loadingBoxContent {
+  position: absolute;
+  height: 80vh;
+  margin: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.notFound {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 24px;
+}

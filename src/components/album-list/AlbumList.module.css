@@ -1,0 +1,57 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 45px;
+}
+
+.albumContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #d3d3d3;
+    border-radius: 10px;
+    padding: 10px;
+    width: fit-content;
+    position: relative;
+}
+
+.albumContainer:hover {
+    background-color: #a0a0f9;
+}
+
+.albumThumbnail {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 150px;
+    width: 150px;
+}
+
+.heading {
+    display: block;
+    margin-block-start: 1.33em;
+    margin-block-end: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+    text-align: center;
+}
+
+.hoverButtons {
+    background-color:cornflowerblue;
+    /* background-color: #a0a0f9; */
+    /* background-color: #d86060; */
+    box-shadow: 4px 4px 3px #222;
+    border-radius: 50%;
+    position: absolute;
+    top: -10%;
+    right: -10%;
+    padding: 10px;
+
+
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+}

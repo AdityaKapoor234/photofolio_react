@@ -1,0 +1,35 @@
+.hoverEditButtons {
+    background-color:cornflowerblue;
+    /* background-color: #a0a0f9; */
+    /* background-color: #d86060; */
+    box-shadow: 4px 4px 3px #222;
+    border-radius: 50%;
+    position: absolute;
+    top: -10%;
+    right: 23%;
+    padding: 10px;
+
+
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+}
+
+.hoverThumbnailButtons {
+    background-color:cornflowerblue;
+    box-shadow: 4px 4px 3px #222;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0%;
+    right: -10%;
+    padding: 10px;
+
+
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+}
+
+.containerMargin {
+    margin-top: 18px;
+}

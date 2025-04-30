@@ -1,0 +1,22 @@
+.backButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+    box-shadow: 2px 2px 2px #444, -1px 0 0 #fff, 2px 2px 2px #444, 0 -1px 0 #fff;
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+
+    cursor: pointer;
+}
+
+.backButton div {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    height: 23px;
+    width: 23px;
+}
