@@ -13,6 +13,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 export default function Home() {
     const [loading, setLoading] = useState(true);
     const [addAlbum, setAddAlbum] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [edit, setEdit] = useState({});
 
     const [albums, setAlbums] = useState([]);
 
@@ -56,6 +58,10 @@ export default function Home() {
                         {
                             addAlbum &&
                             <AlbumForm
+                                isEdit={isEdit}
+                                setIsEdit={setIsEdit}
+                                edit={edit}
+                                setEdit={setEdit}
                                 getInitialData={getInitialData}
                                 setLoading={setLoading}
                             />
@@ -67,7 +73,14 @@ export default function Home() {
                                 </h1>
                             </div>
                             <div>
-                                <button className={HomeStyle.button} onClick={() => setAddAlbum(prev => !prev)}>
+                                <button
+                                    className={HomeStyle.button}
+                                    onClick={() => {
+                                        setAddAlbum(prev => !prev)
+                                        setIsEdit(false);
+                                        setEdit({});
+                                    }}
+                                >
                                     {addAlbum ? "Cancel" : <>Add&nbsp;Album</>}
                                 </button>
                             </div>
@@ -75,8 +88,11 @@ export default function Home() {
                         <AlbumList
                             albums={albums}
                             setAlbums={setAlbums}
+                            setIsEdit={setIsEdit}
+                            setEdit={setEdit}
                             getInitialData={getInitialData}
                             setLoading={setLoading}
+                            setAddAlbum={setAddAlbum}
                         />
                     </div>
             }

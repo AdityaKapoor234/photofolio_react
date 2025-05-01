@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // Import routing management libraries
-import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route, BrowserRouter, Routes } from "react-router-dom";
+import { Route, BrowserRouter, Routes } from "react-router-dom";
 
 // Import application components
 import Navbar from "./components/navbar/Navbar";

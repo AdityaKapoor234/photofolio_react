@@ -10,7 +10,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 // Toast notification library
 import { toast } from "react-toastify";
-import Carousel from "../carousel/Carousel";
 
 export default function ImageList(props) {
 

@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { db } from "../../firebaseinit";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
 
 // Toast notification library
 import { toast } from "react-toastify";
@@ -20,13 +20,29 @@ export default function AlbumForm(props) {
                 return;
             }
 
-            await addDoc(collection(db, "albums"), {
-                albumName: albumNameRef.current.value,
-                images: [],
-                thumbnail: "",
-            });
+            if (props?.isEdit) {
+                const docRef = doc(db, "albums", props?.edit?.id);
+
+                await updateDoc(docRef, {
+                    ...props?.edit,
+                    albumName: albumNameRef.current.value,
+                });
+
+                toast.success("Album has been updated");
+
+                props?.setIsEdit(false);
+                props?.setEdit({});
+            } else {
+                await addDoc(collection(db, "albums"), {
+                    albumName: albumNameRef.current.value,
+                    images: [],
+                    thumbnail: "",
+                });
+
+                toast.success("Album created successfully!");
+            }
+
             if (albumNameRef.current) albumNameRef.current.value = "";
-            toast.success("Album created successfully!");
         } catch (e) {
             console.log("ERROR: ", e);
             toast.error("Something went wrong please try again later");
@@ -36,10 +52,16 @@ export default function AlbumForm(props) {
         }
     }
 
+    useEffect(() => {
+        if (props?.isEdit) {
+            albumNameRef.current.value = props?.edit?.albumName;
+        }
+    }, [props?.edit, props?.edit.imageURL, props?.edit.name, props?.isEdit])
+
     return (
         <form onSubmit={handleSubmit} className={AlbumFormStyle.form}>
             <div className={AlbumFormStyle.albumFormHeading}>
-                Create Album
+                {props?.isEdit ? "Edit Album" : "Create Album"}
             </div>
             <div>
                 <input type="text" placeholder="Enter an album name..." ref={albumNameRef} className={AlbumFormStyle.albumFormInputBox} />
@@ -49,7 +71,7 @@ export default function AlbumForm(props) {
                     Clear
                 </button>
                 <button type="submit" className={AlbumFormStyle.button}>
-                    Create
+                    {props?.isEdit ? "Edit" : "Create"}
                 </button>
             </div>
         </form>

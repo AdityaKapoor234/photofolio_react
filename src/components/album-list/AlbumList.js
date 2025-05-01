@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import AlbumListStyle from "./AlbumList.module.css";
 import ImageListStyle from "../image-list/ImageList.module.css";
 
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function AlbumList(props) {
@@ -28,6 +29,19 @@ export default function AlbumList(props) {
                     }
             })
         );
+    }
+
+    function handleEdit(item) {
+        try {
+            props?.setAddAlbum(true);
+            props?.setIsEdit(true);
+            props?.setEdit({
+                ...item,
+                hover: false,
+            });
+        } catch (e) {
+            console.log("ERROR: ", e);
+        }
     }
 
     async function deleteAlbum(id) {
@@ -62,12 +76,17 @@ export default function AlbumList(props) {
                                 >
                                     {
                                         elem?.hover &&
-                                        <div
-                                            className={AlbumListStyle.hoverButtons}
-                                            onClick={() => deleteAlbum(elem?.id)}
-                                        >
-                                            <DeleteIcon />
-                                        </div>
+                                        <>
+                                            <div className={ImageListStyle.hoverEditButtons} onClick={() => handleEdit(elem)}>
+                                                <EditIcon />
+                                            </div>
+                                            <div
+                                                className={AlbumListStyle.hoverButtons}
+                                                onClick={() => deleteAlbum(elem?.id)}
+                                            >
+                                                <DeleteIcon />
+                                            </div>
+                                        </>
                                     }
                                     <div className={ImageListStyle.containerMargin} onClick={() => navigate(`album/${elem?.id}`)}>
                                         <div
