@@ -13,6 +13,7 @@ export default function AlbumForm(props) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        props?.setLoading(true);
         try {
             if (!albumNameRef.current.value?.trim()) {
                 toast.error("Please enter album name");
@@ -24,11 +25,14 @@ export default function AlbumForm(props) {
                 images: [],
                 thumbnail: "",
             });
-            albumNameRef.current.value = "";
+            if (albumNameRef.current) albumNameRef.current.value = "";
             toast.success("Album created successfully!");
-            props?.getInitialData();
         } catch (e) {
             console.log("ERROR: ", e);
+            toast.error("Something went wrong please try again later");
+        } finally {
+            await props?.getInitialData();
+            props?.setLoading(false);
         }
     }
 
@@ -41,7 +45,7 @@ export default function AlbumForm(props) {
                 <input type="text" placeholder="Enter an album name..." ref={albumNameRef} className={AlbumFormStyle.albumFormInputBox} />
             </div>
             <div>
-                <button onClick={() => { albumNameRef.current.value = ""; }} className={AlbumFormStyle.button}>
+                <button type="button" onClick={() => { albumNameRef.current.value = ""; }} className={AlbumFormStyle.button}>
                     Clear
                 </button>
                 <button type="submit" className={AlbumFormStyle.button}>

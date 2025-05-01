@@ -55,7 +55,10 @@ export default function Home() {
                     <div className="bodySpace">
                         {
                             addAlbum &&
-                            <AlbumForm getInitialData={getInitialData} />
+                            <AlbumForm
+                                getInitialData={getInitialData}
+                                setLoading={setLoading}
+                            />
                         }
                         <div className={HomeStyle.titleRow}>
                             <div>
@@ -69,7 +72,12 @@ export default function Home() {
                                 </button>
                             </div>
                         </div>
-                        <AlbumList albums={albums} setAlbums={setAlbums} getInitialData={getInitialData} />
+                        <AlbumList
+                            albums={albums}
+                            setAlbums={setAlbums}
+                            getInitialData={getInitialData}
+                            setLoading={setLoading}
+                        />
                     </div>
             }
         </>

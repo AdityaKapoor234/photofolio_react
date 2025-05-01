@@ -1,0 +1,38 @@
+.carousel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.closeButton {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.button {
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.imageButtonRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.image {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+
+    height: 70vh;
+    width: 75vw;
+    margin: auto;
+}
+
+.name {
+    color: #ffffff;
+    font-size: 30px;
+    text-align: center;
+}

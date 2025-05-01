@@ -14,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export default function AlbumList(props) {
     const navigate = useNavigate();
 
-    function setHover(id) {
+    function setHover(id, value) {
         props?.setAlbums(
             props?.albums?.map(elem => {
                 return elem.id === id ?
@@ -22,18 +22,25 @@ export default function AlbumList(props) {
                         ...elem,
                         hover: !elem.hover,
                     } :
-                    elem
+                    {
+                        ...elem,
+                        hover: false,
+                    }
             })
         );
     }
 
     async function deleteAlbum(id) {
+        props?.setLoading(true);
         try {
             await deleteDoc(doc(db, "albums", id));
             toast.success("Album deleted successfully!");
-            props?.getInitialData();
         } catch (e) {
             console.log("ERROR: ", e);
+            toast.error("Something went wrong please try again later");
+        } finally {
+            await props?.getInitialData();
+            props?.setLoading(false);
         }
     }
 
@@ -50,8 +57,8 @@ export default function AlbumList(props) {
                             <>
                                 <div
                                     className={AlbumListStyle.albumContainer}
-                                    onMouseEnter={() => setHover(elem?.id)}
-                                    onMouseLeave={() => setHover(elem?.id)}
+                                    onMouseEnter={() => setHover(elem?.id, true)}
+                                    onMouseLeave={() => setHover(elem?.id, false)}
                                 >
                                     {
                                         elem?.hover &&
@@ -73,7 +80,11 @@ export default function AlbumList(props) {
                                         >
                                         </div>
                                         <div className={AlbumListStyle.heading}>
-                                            {elem?.albumName}
+                                            <div className="elip-text" title={elem?.albumName}>
+                                                {elem?.albumName?.substring(0, 11)}
+                                                {elem?.albumName?.length > 11 && "..."}
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>

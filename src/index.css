@@ -13,7 +13,7 @@ code {
 }
 
 .bodySpace {
-  margin: 40px 50px;
+  padding: 40px 50px;
 }
 
 .loadingBox {
@@ -37,4 +37,10 @@ code {
   align-items: center;
   width: 100%;
   font-size: 24px;
+}
+
+.elip-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

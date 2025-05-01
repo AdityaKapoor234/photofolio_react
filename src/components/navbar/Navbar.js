@@ -69,7 +69,7 @@ export default function Navbar(props) {
 
     return (
         <>
-            <div className={NavbarStyle?.navbar}>
+            <div className={NavbarStyle?.navbar} style={props?.darkMode ? {backgroundColor: "#000000", color: "#ffffff"} : undefined}>
                 <div class={NavbarStyle?.navbarLogo} onClick={() => navigate("/")}>
                     <img src="/assets/logo.png" alt="logo" />
                     <span>PhotoFolio</span>

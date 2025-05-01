@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { db } from "../../firebaseinit";
 import { doc, updateDoc } from "firebase/firestore";
@@ -14,6 +14,7 @@ export default function ImageForm(props) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        props?.setLoading(true);
         try {
             if (!titleRef.current.value?.trim()) {
                 toast.error("Please enter image title");
@@ -26,33 +27,68 @@ export default function ImageForm(props) {
 
             const docRef = doc(db, "albums", props?.albumID);
 
-            await updateDoc(docRef, {
-                ...props?.images,
-                images: [
-                    ...props?.images?.images,
-                    {
-                        id: props?.images?.images?.length < 1 ? 1 : props?.images?.images[props?.images?.images?.length - 1]?.id + 1,
-                        name: titleRef.current.value?.trim(),
-                        imageURL: urlRef.current.value?.trim(),
-                        isThumbnail: false,
-                    },
-                ]
-            });
+            if (props?.isEdit) {
+                await updateDoc(docRef, {
+                    ...props?.images,
+                    images: props?.images?.images?.map((elem) => {
+                        return elem?.id === props?.edit?.id ?
+                            {
+                                ...elem,
+                                name: titleRef.current.value?.trim(),
+                                imageURL: urlRef.current.value?.trim(),
+                            }
+                            :
+                            {
+                                ...elem,
+                            }
+                    }),
+                });
 
-            titleRef.current.value = "";
-            urlRef.current.value = "";
+                toast.success("Image has been updated");
 
-            toast.success("Image uploaded successfully!");
-            props?.getInitialData();
+                props?.setIsEdit(false);
+                props?.setEdit({});
+            } else {
+                await updateDoc(docRef, {
+                    ...props?.images,
+                    images: [
+                        ...props?.images?.images,
+                        {
+                            id: props?.images?.images?.length < 1 ? 1 : props?.images?.images[props?.images?.images?.length - 1]?.id + 1,
+                            name: titleRef.current.value?.trim(),
+                            imageURL: urlRef.current.value?.trim(),
+                            isThumbnail: false,
+                        },
+                    ]
+                });
+
+                toast.success("Image uploaded successfully!");
+            }
+
+
+            if (titleRef.current) titleRef.current.value = "";
+            if (urlRef.current) urlRef.current.value = "";
+
         } catch (e) {
             console.log("ERROR: ", e);
+            toast.error("Something went wrong please try again later");
+        } finally {
+            await props?.getInitialData();
+            props?.setLoading(false);
         }
     }
+
+    useEffect(() => {
+        if (props?.isEdit) {
+            titleRef.current.value = props?.edit?.name;
+            urlRef.current.value = props?.edit?.imageURL;
+        }
+    }, [props?.edit?.imageURL, props?.edit?.name, props?.isEdit])
 
     return (
         <form onSubmit={handleSubmit} className={AlbumFormStyle.form}>
             <div className={AlbumFormStyle.albumFormHeading}>
-                Add Image
+                {props?.isEdit ? "Edit Image" : "Add Image"}
             </div>
             <div>
                 <div>
@@ -64,6 +100,7 @@ export default function ImageForm(props) {
             </div>
             <div>
                 <button
+                    type="button"
                     onClick={() => {
                         titleRef.current.value = "";
                         urlRef.current.value = "";
@@ -74,7 +111,7 @@ export default function ImageForm(props) {
                     Clear
                 </button>
                 <button type="submit" className={AlbumFormStyle.button}>
-                    Create
+                    {props?.isEdit ? "Edit" : "Create"}
                 </button>
             </div>
         </form>

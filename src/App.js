@@ -8,6 +8,8 @@ import Navbar from "./components/navbar/Navbar";
 import Home from "./components/home/Home";
 import Album from "./components/album/Album";
 
+import { ThemeContainer } from "./style/theme";
+
 // Toast notification container
 import { ToastContainer } from 'react-toastify';
 
@@ -26,7 +28,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   return (
-    <div>
+    <ThemeContainer color={darkMode ? "#3b3b3b" : "#ffffff"} textColor={darkMode ? "#ffffff" : "#000000"}>
       {/* <RouterProvider router={router} /> */}
 
 
@@ -35,14 +37,14 @@ export default function App() {
         {/* Define application routes */}
         <Routes>
           <Route path="/" element={<Navbar darkMode={darkMode} setDarkMode={setDarkMode} />}>
-            <Route index element={<Home darkMode={darkMode} />} />
-            <Route path="album/:albumID" element={<Album darkMode={darkMode} />} />
+            <Route index element={<Home />} />
+            <Route path="album/:albumID" element={<Album />} />
           </Route>
         </Routes>
       </BrowserRouter>
 
       {/* Container for toast notifications */}
       <ToastContainer />
-    </div>
+    </ThemeContainer>
   );
 }

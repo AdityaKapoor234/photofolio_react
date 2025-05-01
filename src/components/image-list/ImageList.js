@@ -10,27 +10,34 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 // Toast notification library
 import { toast } from "react-toastify";
+import Carousel from "../carousel/Carousel";
 
 export default function ImageList(props) {
 
-    function setHover(id) {
+    function setHover(id, value) {
         props?.setImages({
             ...props?.images,
             images: props?.images?.images?.map(elem => {
                 return elem.id === id ?
                     {
                         ...elem,
-                        hover: !elem.hover,
+                        hover: value,
                     } :
-                    elem
+                    {
+                        ...elem,
+                        hover: false,
+                    }
             })
         });
     }
 
     async function setThumbnail(item) {
+        props?.setLoading(true);
         try {
 
             const docRef = doc(db, "albums", props?.albumID);
+
+            let newThumbnail = item?.isThumbnail ? "" : item?.imageURL;
 
             await updateDoc(docRef, {
                 ...props?.images,
@@ -38,7 +45,7 @@ export default function ImageList(props) {
                     return elem?.id === item?.id ?
                         {
                             ...elem,
-                            isThumbnail: true,
+                            isThumbnail: !elem?.isThumbnail,
                         }
                         :
                         {
@@ -46,49 +53,77 @@ export default function ImageList(props) {
                             isThumbnail: false,
                         }
                 }),
-                thumbnail: item?.imageURL,
+                thumbnail: newThumbnail,
             });
 
-            toast.success("New Thumbnail has been updated");
+            toast.success(item?.isThumbnail ? "There is no thumbnail for this album now" : "New Thumbnail has been updated");
 
-            props?.getInitialData();
+        } catch (e) {
+            console.log("ERROR: ", e);
+            toast.error("Something went wrong please try again later");
+        } finally {
+            await props?.getInitialData();
+            props?.setLoading(false);
+        }
+    }
+
+    function handleEdit(item) {
+        try {
+            props?.setAddImage(true);
+            props?.setIsEdit(true);
+            props?.setEdit({
+                ...item,
+                hover: false,
+            });
         } catch (e) {
             console.log("ERROR: ", e);
         }
     }
 
-    async function handleEdit(item) {
+    async function handleDelete(item) {
+        props?.setLoading(true);
         try {
+            const docRef = doc(db, "albums", props?.albumID);
+
+            let newThumbnail = item?.isThumbnail ? "" : props?.images?.thumbnail;
+
+            await updateDoc(docRef, {
+                ...props?.images,
+                images: props?.images?.images?.filter((elem) => elem?.id !== item?.id),
+                thumbnail: newThumbnail,
+            });
+
+            toast.success("Image has been deleted");
 
         } catch (e) {
             console.log("ERROR: ", e);
+            toast.error("Something went wrong please try again later");
+        } finally {
+            await props?.getInitialData();
+            props?.setLoading(false);
         }
     }
 
-    async function handleDelete(id) {
-        try {
-
-        } catch (e) {
-            console.log("ERROR: ", e);
-        }
+    function setCarousel(index) {
+        props?.initializeCarouselImage(index, "set");
+        props?.setIsCarousel(true);
     }
 
     return (
         <div className={AlbumListStyle.container}>
-            {console.log(props?.images, "images")}
             {
                 props?.images?.images && props?.images?.images?.length < 1 ?
                     <div className="notFound">
                         No Images Found
                     </div>
                     :
-                    props?.images?.images?.map((elem) => {
+                    props?.images?.images?.map((elem, index) => {
                         return (
                             <>
                                 <div
                                     className={AlbumListStyle.albumContainer}
-                                    onMouseEnter={() => setHover(elem?.id)}
-                                    onMouseLeave={() => setHover(elem?.id)}
+                                    onMouseEnter={() => setHover(elem?.id, true)}
+                                    onMouseLeave={() => setHover(elem?.id, false)}
                                 >
                                     {
                                         (elem?.hover || elem?.isThumbnail) &&
@@ -102,16 +137,19 @@ export default function ImageList(props) {
                                             <div className={ImageListStyle.hoverEditButtons} onClick={() => handleEdit(elem)}>
                                                 <EditIcon />
                                             </div>
-                                            <div className={AlbumListStyle.hoverButtons} onClick={() => handleDelete(elem?.id)}>
+                                            <div className={AlbumListStyle.hoverButtons} onClick={() => handleDelete(elem)}>
                                                 <DeleteIcon />
                                             </div>
                                         </>
                                     }
-                                    <div className={ImageListStyle.containerMargin}>
+                                    <div className={ImageListStyle.containerMargin} onClick={() => setCarousel(index)} style={{cursor: "pointer"}}>
                                         <div className={AlbumListStyle.albumThumbnail} style={{ backgroundImage: `url(${elem?.imageURL})` }}>
                                         </div>
                                         <div className={AlbumListStyle.heading}>
-                                            {elem?.name}
+                                            <div className="elip-text" title={elem?.name}>
+                                                {elem?.name?.substring(0, 11)}
+                                                {elem?.name?.length > 11 && "..."}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
