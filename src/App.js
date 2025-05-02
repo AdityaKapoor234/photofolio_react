@@ -8,6 +8,7 @@ import { Route, BrowserRouter, Routes } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
 import Home from "./components/home/Home";
 import Album from "./components/album/Album";
+import ErrorPage from "./components/error-page/ErrorPage";
 
 // Theme container component for global styling
 import { ThemeContainer } from "./style/theme";
@@ -41,7 +42,11 @@ export default function App() {
            * Main layout route that includes the Navbar
            * Passes darkMode state and setter to Navbar
            */}
-          <Route path="/" element={<Navbar darkMode={darkMode} setDarkMode={setDarkMode} />}>
+          <Route
+            path="/"
+            element={<Navbar darkMode={darkMode} setDarkMode={setDarkMode} />}
+            errorElement={<ErrorPage />}
+          >
             {/* Index route - renders Home component at root path */}
             <Route index element={<Home />} />
             {/*
@@ -49,6 +54,8 @@ export default function App() {
              * :albumID is a URL parameter
              */}
             <Route path="album/:albumID" element={<Album />} />
+            {/* Catch-all route for undefined paths */}
+            <Route path="*" element={<ErrorPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
